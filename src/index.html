@@ -1,1 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Nest Images</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 12px;
+      padding: 16px;
+      background: #2c2c2c;
+      color: #e0e0e0;
+      line-height: 1.5;
+    }
+
+    .section {
+      margin-bottom: 20px;
+      padding: 12px;
+      background: #3a3a3a;
+      border-radius: 6px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #a0a0a0;
+      margin-bottom: 10px;
+    }
+
+    .control-group {
+      margin-bottom: 12px;
+    }
+
+    .control-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: #d0d0d0;
+    }
+
+    .control-value {
+      color: #60a5fa;
+      font-weight: 500;
+    }
+
+    /* Slider */
+    input[type="range"] {
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      background: #555;
+      border-radius: 2px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      background: #60a5fa;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #3b82f6;
+    }
+
+    /* Checkbox/Toggle */
+    .toggle-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+
+    .toggle-label {
+      font-size: 11px;
+      color: #d0d0d0;
+    }
+
+    input[type="checkbox"] {
+      width: 38px;
+      height: 20px;
+      -webkit-appearance: none;
+      background: #555;
+      border-radius: 10px;
+      position: relative;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.3s;
+    }
+
+    input[type="checkbox"]:checked {
+      background: #60a5fa;
+    }
+
+    input[type="checkbox"]::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      background: white;
+      transition: left 0.3s;
+    }
+
+    input[type="checkbox"]:checked::before {
+      left: 20px;
+    }
+
+    /* Select dropdown */
+    select {
+      width: 100%;
+      padding: 8px;
+      background: #2c2c2c;
+      border: 1px solid #555;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-size: 11px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    select:hover {
+      border-color: #60a5fa;
+    }
+
+    /* Button */
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      color: white;
+      box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #4a4a4a;
+      color: #e0e0e0;
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #555;
+    }
+
+    /* Info display */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 11px;
+      border-bottom: 1px solid #444;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #a0a0a0;
+    }
+
+    .info-value {
+      color: #60a5fa;
+      font-weight: 500;
+    }
+
+    /* Message area */
+    .message {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      display: none;
+    }
+
+    .message-info {
+      background: #1e3a5f;
+      color: #60a5fa;
+      border-left: 3px solid #60a5fa;
+    }
+
+    .message-success {
+      background: #1e4620;
+      color: #4ade80;
+      border-left: 3px solid #4ade80;
+    }
+
+    .message-warning {
+      background: #4a3c1e;
+      color: #fbbf24;
+      border-left: 3px solid #fbbf24;
+    }
+
+    .message-error {
+      background: #4a1e1e;
+      color: #f87171;
+      border-left: 3px solid #f87171;
+    }
+
+    /* Statistics */
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 11px;
+    }
+
+    .stat-row span:first-child {
+      color: #a0a0a0;
+    }
+
+    .stat-row span:last-child {
+      color: #e0e0e0;
+      font-weight: 500;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #444;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #60a5fa;
+      margin-bottom: 4px;
+    }
+
+    .header p {
+      font-size: 10px;
+      color: #a0a0a0;
+    }
+
+    /* Icon indicators */
+    .icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Auto Nest Images</h1>
+    <p>Automatically arrange images for optimal space usage</p>
+  </div>
+
+  <!-- Message Area -->
+  <div id="messageArea" class="message"></div>
+
+  <!-- Document Info -->
+  <div class="section">
+    <div class="section-title">Document</div>
+    <div class="control-group">
+      <div class="control-label">
+        <span>Artboard</span>
+      </div>
+      <select id="artboardSelect">
+        <option value="0">Artboard 1</option>
+      </select>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Images found:</span>
+      <span class="info-value" id="imageCount">—</span>
+    </div>
+  </div>
+
+  <!-- Nesting Settings -->
+  <div class="section">
+    <div class="section-title">Settings</div>
+    
+    <!-- Spacing -->
+    <div class="control-group">
+      <div class="control-label">
+        <span>Spacing between images</span>
+        <span class="control-value" id="spacingValue">10px</span>
+      </div>
+      <input type="range" id="spacingSlider" min="0" max="100" value="10" step="5">
+    </div>
+
+    <!-- Allow Rotation -->
+    <div class="toggle-control">
+      <label class="toggle-label" for="rotationToggle">Allow 90° rotation</label>
+      <input type="checkbox" id="rotationToggle">
+    </div>
+
+    <!-- Selected Only -->
+    <div class="toggle-control">
+      <label class="toggle-label" for="selectedOnlyToggle">Selected images only</label>
+      <input type="checkbox" id="selectedOnlyToggle">
+    </div>
+
+    <!-- Preview -->
+    <div class="toggle-control">
+      <label class="toggle-label" for="previewToggle">Show preview boxes</label>
+      <input type="checkbox" id="previewToggle">
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="section">
+    <button id="nestButton" class="btn-primary">
+      Nest Now
+    </button>
+    <button id="undoButton" class="btn-secondary">
+      Undo Last Nesting
+    </button>
+  </div>
+
+  <!-- Statistics -->
+  <div class="section">
+    <div class="section-title">Statistics</div>
+    <div id="statistics">
+      <div class="stat-row">
+        <span>Click "Nest Now" to begin</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tips -->
+  <div class="section">
+    <div class="section-title">Tips</div>
+    <div style="font-size: 10px; color: #a0a0a0; line-height: 1.6;">
+      • Images are packed largest-first for best efficiency<br>
+      • Increase spacing if images have important edge details<br>
+      • Enable rotation for tighter packing (works best with varied shapes)<br>
+      • Locked or hidden images are automatically skipped
+    </div>
+  </div>
+
+  <script type="module" src="index.js"></script>
+</body>
+</html>
