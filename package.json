@@ -1,1 +1,30 @@
-
+{
+  "name": "illustrator-auto-nest",
+  "version": "1.0.0",
+  "description": "Auto-nesting plugin for Adobe Illustrator using space-efficient bin-packing algorithms",
+  "main": "index.js",
+  "scripts": {
+    "build": "uxp-build",
+    "watch": "uxp-watch",
+    "package": "uxp-package",
+    "load": "uxp-load --debug"
+  },
+  "keywords": [
+    "adobe",
+    "illustrator",
+    "uxp",
+    "plugin",
+    "nesting",
+    "bin-packing",
+    "layout"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@adobe/ccweb-add-on-sdk": "^1.1.0",
+    "@adobe/uxp-devtools": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
